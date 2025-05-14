@@ -1,0 +1,31 @@
+<app-nav/>
+<main class="items-center justify-center min-h-min h-[calc(100dvh-5.5rem)] bg-pink-400">
+  <section class="py-8 px-4 max-w-4xl mx-auto">
+    <div class="grid gap-5 grid-cols-1">
+      @for (item of posts(); track $index) {
+        <app-post [post]="item"></app-post>
+      }
+    </div>
+
+    <!-- Controles de paginación -->
+    <div class="flex items-center justify-between mt-8">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="!pagination()?.previous" 
+        class="px-4 py-2 bg-white text-pink-500 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow">
+        Anterior
+      </button>
+
+      <span class="text-white text-sm">
+        Página {{ pagination()?.current_page }} de {{ pagination()?.total_pages }}
+      </span>
+
+      <button 
+        (click)="nextPage()" 
+        [disabled]="!pagination()?.next"
+        class="px-4 py-2 bg-white text-pink-500 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow">
+        Siguiente
+      </button>
+    </div>
+  </section>
+</main>
