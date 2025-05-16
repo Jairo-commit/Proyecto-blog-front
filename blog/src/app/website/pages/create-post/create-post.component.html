@@ -1,0 +1,79 @@
+<div class="min-h-screen bg-stone-900 flex flex-col">
+    <app-nav></app-nav>
+  
+    <div class="w-full flex justify-center mt-6">
+      <div class="w-full max-w-2xl border border-stone-700 bg-stone-800 rounded-xl p-6 shadow-md text-stone-100">
+  
+        <h2 class="text-2xl font-bold mb-4 text-emerald-400">Create New Post</h2>
+  
+        <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="space-y-4">
+  
+          <!-- Title -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Title</label>
+            <input type="text" formControlName="title"
+                   class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <div *ngIf="postForm.get('title')?.invalid && postForm.get('title')?.touched" class="text-red-400 text-sm mt-1">
+              Title is required
+            </div>
+          </div>
+  
+          <!-- Content -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Content</label>
+            <textarea formControlName="content" rows="5"
+                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+            <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched" class="text-red-400 text-sm mt-1">
+              Content is required
+            </div>
+          </div>
+  
+          <!-- Permissions -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  
+            <div>
+              <label class="block text-sm font-medium mb-1">Public Access</label>
+              <select formControlName="public_access"
+                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
+                <option *ngFor="let option of publicOptions" [value]="option.value">{{ option.label }}</option>
+              </select>
+            </div>
+  
+            <div>
+              <label class="block text-sm font-medium mb-1">Authenticated Access</label>
+              <select formControlName="authenticated_access"
+                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
+                <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+              </select>
+            </div>
+  
+            <div>
+              <label class="block text-sm font-medium mb-1">Group Access</label>
+              <select formControlName="group_access"
+                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
+                <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+              </select>
+            </div>
+  
+            <div>
+              <label class="block text-sm font-medium mb-1">Author Access</label>
+              <select formControlName="author_access"
+                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
+                <option *ngFor="let option of authorOptions" [value]="option.value">{{ option.label }}</option>
+              </select>
+            </div>
+  
+          </div>
+  
+          <!-- Submit -->
+          <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
+              Create Post
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

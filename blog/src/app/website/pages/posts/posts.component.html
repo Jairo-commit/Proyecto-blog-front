@@ -1,31 +1,43 @@
-<app-nav/>
-<main class="items-center justify-center min-h-min h-[calc(100dvh-5.5rem)] bg-pink-400">
-  <section class="py-8 px-4 max-w-4xl mx-auto">
-    <div class="grid gap-5 grid-cols-1">
-      @for (item of posts(); track $index) {
-        <app-post [post]="item"></app-post>
-      }
-    </div>
+<div class="flex flex-col min-h-screen bg-stone-900">
+  <app-nav class=""/>
+<!-- Ícono fijo arriba a la izquierda -->
 
+<main class="items-center justify-center flex-grow bg-stone-900 relative">
+  <section class="py-8 px-4 max-w-4xl mx-auto">
+
+    <div class="grid gap-5 grid-cols-1">
+      <ng-container *ngFor="let item of posts(); index as i">
+        <app-post [post]="item"></app-post>
+      </ng-container>
+    </div>
     <!-- Controles de paginación -->
     <div class="flex items-center justify-between mt-8">
       <button 
         (click)="previousPage()" 
         [disabled]="!pagination()?.previous" 
-        class="px-4 py-2 bg-white text-pink-500 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow">
+        class="px-4 py-2 bg-emerald-600 text-stone-100 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow hover:bg-emerald-500 transition"
+      >
         Anterior
       </button>
 
-      <span class="text-white text-sm">
+      <span class="text-stone-100 text-sm">
         Página {{ pagination()?.current_page }} de {{ pagination()?.total_pages }}
       </span>
 
       <button 
         (click)="nextPage()" 
         [disabled]="!pagination()?.next"
-        class="px-4 py-2 bg-white text-pink-500 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow">
+        class="px-4 py-2 bg-emerald-600 text-stone-100 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow hover:bg-emerald-500 transition"
+      >
         Siguiente
       </button>
     </div>
   </section>
 </main>
+@if (profile !== null) {
+  <div class="fixed bottom-1/7 right-24 cursor-pointer">
+  <app-create-post-button />
+</div>
+}
+
+</div>

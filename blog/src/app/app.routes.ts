@@ -6,12 +6,27 @@ import { RegisterComponent } from '@website/pages/register/register.component';
 import { PostsComponent } from '@website/pages/posts/posts.component';
 import { authGuard } from '@guards/auth.guard';
 import { redirectGuard } from '@guards/redirect.guard';
+import { DetailpostComponent } from '@website/pages/detailpost/detailpost.component';
+import { CreatePostComponent } from '@website/pages/create-post/create-post.component';
 
 export const routes: Routes = [
     {
-        path: '',   
+        path: '',
+        redirectTo: 'posts',
+        pathMatch: 'full'
+    },
+    {
+        path: 'posts',   
         // canActivate: [authGuard], // Should be logged
         component: PostsComponent
+    },
+    {
+        path: 'posts/create-post',
+        component: CreatePostComponent
+    },
+    {
+        path: 'posts/:id',
+        component: DetailpostComponent
     },
     {
         path: 'login',

@@ -1,0 +1,72 @@
+<div class="w-11/12 max-w-3xl mx-auto mt-10">
+    <!-- Título de sección -->
+    <h2 class="text-xl font-semibold text-emerald-400 mb-4 text-center">Comments</h2>
+  
+    <!-- Lista de comentarios -->
+     <div *ngIf="comments().length === 0" class="text-sm text-stone-300">No comments yet</div>
+    <div *ngFor="let item of comments(); let i = index">
+      <ul class="space-y-4 mt-2">
+        <li class="border border-stone-700 rounded-lg p-4 bg-stone-800 text-stone-100">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-medium text-emerald-300">{{item.user}}</span>
+            <span class="text-xs text-stone-400">{{item.created_at | date}}</span>
+          </div>
+          <p class="text-sm text-stone-300">{{item.content}}</p>
+        </li>
+      </ul>
+    </div>  
+    <!-- Controles de paginación -->
+    <div class="flex items-center justify-between mt-8">
+        <button 
+          (click)="previousPage()" 
+          [disabled]="!pagination()?.previous" 
+          class="px-4 py-2 bg-emerald-600 text-stone-100 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow hover:bg-emerald-500 transition"
+        >
+          Anterior
+        </button>
+  
+        <span class="text-stone-100 text-sm">
+          Página {{ pagination()?.current_page }} de {{ pagination()?.total_pages }}
+        </span>
+  
+        <button 
+          (click)="nextPage()" 
+          [disabled]="!pagination()?.next"
+          class="px-4 py-2 bg-emerald-600 text-stone-100 rounded disabled:opacity-50 disabled:cursor-not-allowed shadow hover:bg-emerald-500 transition"
+        >
+          Siguiente
+        </button>
+      </div>
+    <!-- Formulario para nuevo comentario -->
+     <div *ngIf="isLoggedIn() && !newComment()" class="mt-6 border-t border-stone-700 pt-4" (click)="toggleNewComment()">
+      <h3 class="text-lg font-semibold text-stone-200 mb-2 cursor-pointer">New comment</h3>
+     </div>
+    <div *ngIf="isLoggedIn() && newComment()" class="mt-6 border-t border-stone-700 pt-4" >
+      <h3 class="text-lg font-semibold text-stone-200 mb-2">Add a comment</h3>
+      <form  class="space-y-3" [formGroup]="commentForm" (ngSubmit)="submitComment()">
+        <textarea
+          formControlName="content"
+          name="content"
+          rows="3"
+          placeholder="Write your comment..."
+          class="w-full p-3 rounded-md bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        ></textarea>
+        <section class="flex justify-between">
+            <button
+            type="submit"
+            class="px-4 py-2 bg-emerald-500 text-stone-900 rounded-md hover:bg-emerald-400 transition"
+            [disabled]="commentForm.invalid"
+          >
+            Post Comment
+          </button>
+          <button class="px-4 py-2 bg-emerald-500 text-stone-900 rounded-md hover:bg-emerald-400 transition"
+            (click)="toggleNewComment()" 
+            (click)="this.commentForm.reset()">
+            Cancel
+          </button>
+        </section>
+        
+      </form>
+    </div>
+  </div>
+  

@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, effect, inject, Input, input, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, Input, signal } from '@angular/core';
 import { LikePaginationResponse } from '@models/like.model';
 
 import { LikesAuthor, Post } from '@models/post.model';
@@ -7,6 +7,7 @@ import { AuthService } from '@services/auth/auth.service';
 import { LikeService } from '@services/like/like.service';
 import { PostsService } from '@services/posts/posts.service';
 import { LikesComponent } from '../likes/likes.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,10 +22,19 @@ export class PostComponent{
   private postsService = inject(PostsService);
   
   @Input() post!: Post;
+
+  get postId(): number{
+    return this.post.id;
+  }
+
+  get permissionLevel(): number {
+    return this.post.permission_level;
+  }
     
   _hasLiked = signal<boolean>(false);
   showLikes = signal(false);  // Controlamos la visibilidad del popover de likes
   currentPage = signal(1);
+  deleting = signal<boolean>(false);
 
   likesPost = signal<LikePaginationResponse | null>(null);
 
@@ -32,7 +42,7 @@ export class PostComponent{
     return this.authService.currentUserSignal();
   }
   
-  constructor() {
+  constructor(private router: Router) {
 //     Nunca uses @Input() en el constructor.
 
 // Usa ? (optional chaining) o validaciones para evitar acceder a .id si la variable no existe aún.
@@ -61,6 +71,10 @@ export class PostComponent{
       });
     }
   });
+  }
+
+  goToPostDetail(postId: string | number) {
+    this.router.navigate(['/posts', postId]);
   }
 
   // Función para avanzar a la siguiente página
@@ -102,16 +116,19 @@ export class PostComponent{
         const currentLikes = this.likesPost();
         if (!currentLikes) return;
   
-        const updatedResults = [...currentLikes.results];
         const hasLiked = this._hasLiked();
   
         let newResults: LikesAuthor[];
+        let like: 1|-1;
   
         if (hasLiked) {
-          newResults = updatedResults.filter(like => like.user !== user.username);
+          like = -1
+          newResults = currentLikes.results.filter(like => like.user !== user.username);
+
         } else {
+          like = 1
           newResults = [
-            ...updatedResults,
+            ...currentLikes.results,
             {
               id: Date.now(),
               post: '',
@@ -123,14 +140,33 @@ export class PostComponent{
   
         const updatedLikes: LikePaginationResponse = {
           ...currentLikes,
-          total_count: newResults.length,
+          total_count: currentLikes.total_count + like,
           results: newResults
         };
+        console.log('mis likes son', updatedLikes)
   
         this.likesPost.set(updatedLikes);
         this._hasLiked.set(!hasLiked);
         this.showLikes.set(false);
       }
     });
+  }
+
+  deletePost(){
+    this.postsService.eliminate(this.postId).subscribe(
+      {
+        next: () => {
+          this.toggleDeleting();
+          this.postsService.triggerRefresh();
+        },
+        error: (error) =>{
+          console.log(error)
+        }
+      }
+    );
+  }
+
+  toggleDeleting(){
+    this.deleting.set(!this.deleting());
   }
 }

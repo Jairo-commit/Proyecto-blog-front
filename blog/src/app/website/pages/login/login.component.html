@@ -1,24 +1,24 @@
-<section class="bg-gray-500 dark:bg-gray-900 h-screen flex">
+<section class="bg-stone-900 h-screen flex">
   <div
-    class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+    class="flex flex-col items-center justify-center px-6 py-8 mx-auto"
   >
     <a
-      href="/"
-      class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+      [routerLink]="['/posts']"
+      class="flex items-center mb-6 text-2xl font-semibold text-stone-100"
     >
       <img
         class="w-8 h-8 mr-2"
         src="/assets/birrete.jpg"
         alt="logo"
       />
-      Blog avanzatech
+      Blog Avanzatech
     </a>
     <div
-      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+      class="w-full bg-stone-800 rounded-lg shadow-md md:mt-0 sm:max-w-md xl:p-0 border border-stone-700"
     >
       <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1
-          class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+          class="text-xl font-bold leading-tight tracking-tight text-stone-100 md:text-2xl"
         >
           Sign in to your account
         </h1>
@@ -26,38 +26,80 @@
           <div>
             <label
               for="username"
-              class="block mb-2 text-sm font- medium text-gray-900 dark:text-white"
+              class="block mb-2 text-sm font-medium text-stone-300"
             >
-              Your username {{loginForm.value.username}}
+              Your username
             </label>
             <input
               type="username"
               id="username"
               formControlName="username"
               placeholder="name@avanzatech.com"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-stone-700 border border-stone-600 text-stone-100 rounded-lg focus:ring-emerald-400 focus:border-emerald-400 block w-full p-2.5 placeholder-stone-400"
             />
-            <div *ngIf="loginForm.get('username')?.invalid" class="text-red-500 text-sm mt-1">
-              <div *ngIf="loginForm.get('username')?.errors?.['username']">Correo inválido</div>
+            <div *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)" class="text-red-400 text-sm mt-1">
+              <div *ngIf="loginForm.get('username')?.errors?.['required']">
+                El correo es obligatorio 
+              </div>
+              <div *ngIf="loginForm.get('username')?.errors?.['email']">
+                El correo no es válido
+              </div>
             </div>
+            
           </div>
         
-          <div>
+          <div class="relative">
             <label
               for="password"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-sm font-medium text-stone-300"
             >
-              Password {{loginForm.value.password}}
+              Password
             </label>
             <input
-              type="password"
+              [type]="showPassword ? 'text' : 'password'"
               formControlName="password"
               id="password"
               placeholder="••••••••"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-stone-700 border border-stone-600 text-stone-100 rounded-lg focus:ring-emerald-400 focus:border-emerald-400 block w-full p-2.5 placeholder-stone-400"
             />
-            <div *ngIf="status === 'failed' " >
-              <p class="text-red-500 text-sm mt-1">
+            <!-- Botón para mostrar/ocultar -->
+            <button
+              type="button"
+              (click)="showPassword = !showPassword"
+              class="absolute top-9 right-2 text-stone-400 hover:text-emerald-400 transition"
+            >
+              <svg
+                *ngIf="!showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg
+                *ngIf="showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.199-3.568m2.486-2.1A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.308 5.138M15 12a3 3 0 00-3-3m0 0a3 3 0 00-3 3m3-3L3 3m18 18l-6-6" />
+              </svg>
+            </button>
+            <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)" class="text-red-400 text-sm mt-1">
+              <div *ngIf="loginForm.get('password')?.errors?.['required']">
+                La contraseña es obligatoria
+              </div>
+            </div>
+            <div *ngIf="status === 'failed'">
+              <p class="text-red-400 text-sm mt-1">
                 Credentials are invalid
               </p>
             </div>
@@ -66,22 +108,26 @@
           <button
             type="submit"
             [disabled]="loginForm.invalid"
-            class="w-full text-white bg-teal-500 hover:bg-teal-600 focus:ring-4 focus:outline-none focus:ring-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            class="w-full text-stone-900 bg-emerald-400 hover:bg-emerald-500 focus:ring-4 focus:outline-none focus:ring-emerald-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
             Login
           </button>
         
           <div class="flex items-center justify-between">
-            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            <p class="text-sm font-light text-stone-400">
               Don’t have an account yet?
-              <a href="/register" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+              <a [routerLink]="['/register']" class="font-medium text-emerald-400 hover:underline">
                 Sign up
               </a>
             </p>
           </div>
         </form>
-        <button (click)="getProfile()" class="hover:underline">get profile</button>        
       </div>
     </div>
   </div>
 </section>
+<div *ngIf="successMessage" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 fade-in-out">
+  <div class="bg-emerald-700 text-stone-900 text-2xl font-bold p-8 rounded-lg shadow-lg">
+    {{ successMessage }}
+  </div>
+</div>

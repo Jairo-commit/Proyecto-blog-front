@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { LikesAuthor } from '@models/post.model';
-import { LikePaginationResponse } from '@models/like.model';
 
 @Component({
   selector: 'app-likes',

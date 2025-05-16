@@ -22,6 +22,7 @@ export interface Post{
     author_access:        string;
     likes_author:         LikesAuthor[];
     Comments_author:      CommentsAuthor[];
+    permission_level:     number;
 }
 
 export interface CommentsAuthor {

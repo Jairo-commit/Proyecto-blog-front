@@ -15,6 +15,10 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
+  public post = signal<Post | null>(null);
+  currentPage = signal(1);
+  refreshTrigger = signal(0);
+
   private _posts = signal<Post[]>([]);
   readonly posts = computed(() => this._posts());
 
@@ -52,52 +56,20 @@ export class PostsService {
     );
   }
 
-  updatePost(updatedPost: Post) {
-    const current = this._posts();
-    const index = current.findIndex(p => p.id === updatedPost.id);
-    if (index !== -1) {
-      const updatedList = [...current];
-      updatedList[index] = updatedPost;
-      this._posts.set(updatedList);
-    }
+  triggerRefresh() {
+    this.refreshTrigger.update(v => v + 1);
+  }
+
+  getPostById(id: string): Observable<Post> {
+    return this.http.get<Post>(`${this.postsUrl}${id}`, {
+      context: checkToken()}).pipe(
+        tap(response => {
+          this.post.set(response);
+        })
+    );
+  }
+
+  eliminate(id : number){
+    return this.http.delete(`${this.postsUrl}${id}/`, { context: checkToken()})
   }
 }
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class PostsService {
-
-//   private apiUrl = enviroment.API_URL;
-
-//   private postsUrl = `${this.apiUrl}api/post/`;
-
-//   constructor(
-//     private http: HttpClient,
-//   ) {}
-
-//   // 🧠 Signal reactiva que guarda todos los posts
-//   private _posts = signal<Post[]>([]);
-//   readonly posts = computed(() => this._posts());
-
-//   setPosts(posts: Post[]) {
-//     this._posts.set(posts);
-//   }
-
-//   getPostsToken():Observable<{ results: Post[]}>{
-//     return this.http.get<{ results: Post[]}>(this.postsUrl, {context: checkToken()}); 
-//   }
-//   getPosts():Observable<{ results: Post[]}>{
-//     return this.http.get<{ results: Post[]}>(this.postsUrl); 
-//   }
-//   // ✅ Actualiza un post dentro del array
-//   updatePost(updatedPost: Post) {
-//     const current = this._posts();
-//     const index = current.findIndex(p => p.id === updatedPost.id);
-//     if (index !== -1) {
-//       const updatedList = [...current];
-//       updatedList[index] = updatedPost;
-//       this._posts.set(updatedList);
-//     }
-//   }
-// }

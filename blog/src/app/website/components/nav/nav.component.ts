@@ -12,27 +12,13 @@ import { StorageService } from '@services/storage/storage.service';
 })
 export class NavComponent {
 
-  // profile: User | null = null;
   storageService = inject(StorageService);
   authService = inject(AuthService);
   isLoggedIn = this.authService.isLoggedInSignal;
 
-  // getProfile(){
-  //   this.authService.profile()
-  //   .subscribe(profile =>{
-  //     this.profile = profile
-  // });
-  // }
-
   get profile() {
     return this.authService.currentUserSignal();
   }
-
-  // ngOnInit(): void {
-  //   if (this.isLoggedIn()){
-  //     this.getProfile();
-  //   }
-  // }
 
   logout(): void {
     this.authService.logout();

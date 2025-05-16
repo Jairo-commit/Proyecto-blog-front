@@ -1,59 +1,63 @@
-<nav class="bg-white border-gray-200">
+<nav class="bg-stone-900 border-stone-700">
   <div
-    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 bg-sky-500"
+    class="max-w-lvw flex flex-wrap items-center justify-between"
   >
-    <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <img src="/assets/birrete.jpg" class="h-8" alt="Flowbite Logo" />
+    <a [routerLink]="['/']" class="flex items-center space-x-3 rtl:space-x-reverse">
+      <img src="/assets/birrete.jpg" class="h-6" alt="Avanzatech Logo" />
       <span
-        class="self-center text-2xl font-semibold whitespace-nowrap text-white"
+        class="self-center text-base font-semibold whitespace-nowrap text-emerald-400"
         >Avanzatech</span
       >
     </a>
-    @if (isLoggedIn()) {
-    <div class="block w-auto">
-      <ul
-        class="font-medium flex p-0 mt-4 rounded-lg flex-row bg-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-      >
-        <li>
-          <a
-            routerLink="/profile"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-teal-300"
-            aria-current="page"
-            >{{ profile?.username }}</a
-          >
-        </li>
-        <li>
-          <button
-            (click)="logout()"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-teal-300"
-          >
-            Logout
-          </button>
-        </li>
-      </ul>
-    </div>
-    } @else {
-    <div class="block w-auto">
-      <ul
-        class="font-medium flex p-0 mt-4 rounded-lg flex-row bg-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-      >
+    <!-- Si usas Angular *ngIf en vez de sintaxis razor -->
+    <ng-container *ngIf="isLoggedIn(); else loggedOut">
+      <div class="block w-auto">
+        <ul
+          class="font-medium flex p-0 mt-4 rounded-lg flex-row bg-stone-800 bg-gradient-to-r from-emerald-600 via-stone-700 to-stone-900"
+        >
+          <li>
+            <a
+              class="block py-1 px-2 text-stone-100 rounded-sm hover:bg-emerald-400 hover:text-stone-900"
+              aria-current="page"
+              >{{ profile?.username }}</a
+            >
+          </li>
+          <li>
+            <button
+              (click)="logout()"
+              class="block py-1 px-2 text-stone-100 rounded-sm hover:bg-emerald-400 hover:text-stone-900"
+            >
+              Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+    <ng-template #loggedOut>
+      <div class="block w-auto">
+        <ul
+          class="font-medium flex p-0 mt-4 rounded-lg flex-row bg-stone-800 bg-gradient-to-r from-emerald-600 via-stone-700 to-stone-900"
+        >
         <li>
           <a
             routerLink="/register"
-            class="block py-2 px-3 hover:bg-teal-300 text-white p-4 rounded-lg"
+            class="block py-1 px-2 text-stone-100 rounded-sm transition duration-300 ease-in-out hover:bg-emerald-400 hover:text-stone-900"
             aria-current="page"
-            >Register</a
           >
+            Register
+          </a>
         </li>
         <li>
           <a
-            routerLink="/login"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-teal-300"
-            >Login</a
+          [routerLink]="['/login']"
+            class="block py-1 px-2 text-stone-100 rounded-sm transition duration-300 ease-in-out hover:bg-emerald-400 hover:text-stone-900"
           >
+            Login
+          </a>
         </li>
-      </ul>
-    </div>
-    }
+        
+        </ul>
+      </div>
+    </ng-template>
   </div>
 </nav>

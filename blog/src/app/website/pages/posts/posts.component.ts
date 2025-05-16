@@ -6,11 +6,11 @@ import { CommonModule } from '@angular/common';
 
 import { PostsService } from '@services/posts/posts.service';
 import { AuthService } from '@services/auth/auth.service';
-import { LikeService } from '@services/like/like.service';
+import { CreatePostButtonComponent } from '@website/components/create-post-button/create-post-button.component';
 
 @Component({
   selector: 'app-posts',
-  imports: [NavComponent, PostComponent, CommonModule],
+  imports: [NavComponent, PostComponent, CommonModule, CreatePostButtonComponent],
   templateUrl: './posts.component.html',
 })
 export class PostsComponent {
@@ -19,13 +19,18 @@ export class PostsComponent {
 
   posts = this.postService.posts;
   pagination = this.postService.pagination;
+  
+  currentPage = this.postService.currentPage; // para poder navegar entre páginas
 
-  currentPage = signal(1); // para poder navegar entre páginas
+  get profile() {
+    return this.authService.currentUserSignal();
+  }
 
   constructor() {
     effect(() => {
       const isLoggedIn = this.authService.isLoggedInSignal();
       const page = this.currentPage();
+      const refresh = this.postService.refreshTrigger();
 
       if (isLoggedIn) {
         this.postService.getPostsToken(page).subscribe();
@@ -44,4 +49,5 @@ export class PostsComponent {
     const prev = this.pagination()?.previous;
     if (prev) this.currentPage.update(p => p - 1);
   }
+
 }

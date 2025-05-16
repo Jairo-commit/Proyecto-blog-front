@@ -1,43 +1,59 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 
 import { AuthService } from '../../../services/auth/auth.service';
 import { RequestStatus } from '@models/request-status.model'
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule,  CommonModule],
+  imports: [ReactiveFormsModule,  CommonModule, RouterLink],
   templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   error: string | null = null;
   status: RequestStatus = 'init';
+  showPassword: boolean = false;
+  successMessage: string = '';
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });   
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['registered'] === 'true') {
+        this.showSuccessMessage('Cuenta creada con éxito. Ya puedes iniciar sesión.');
+      }
+    });
+  }
+
+  showSuccessMessage(msg: string) {
+    this.successMessage = msg;
+    setTimeout(() => {
+      this.successMessage = '';
+    }, 3000); 
   }
 
   onSubmit(){
     if (this.loginForm.invalid) {
       console.log('Formulario inválido');
-      return;  // Detén la ejecución si el formulario no es válido
+      return; 
     }
 
     this.status = 'loading';
-
-    console.log('Valores del formulario:', this.loginForm.value);
 
     const { username , password } = this.loginForm.value;
 
@@ -53,12 +69,5 @@ export class LoginComponent {
       }
     )
 
-  }
-
-  getProfile(){
-    this.authService.profile()
-    .subscribe(profile =>{
-      console.log('Este es el perfil registado en el local storage',profile);
-    })
   }
 }
