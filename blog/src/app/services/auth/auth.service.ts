@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 
 import { enviroment } from '@enviroments/enviroment';
 import { Token } from '@models/token.model';
@@ -32,9 +32,9 @@ export class AuthService {
         error: () => this.logout()
       });
     }
-  }
+  } 
 
-  login(username: string, password: string){
+  login(username: string, password: string): Observable<User>{
 
     return this.http.post<Token>(this.loginUrl, { username, password })
     .pipe(

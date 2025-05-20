@@ -3,6 +3,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "es2022",
+    "useDefineForClassFields": false,
     "outDir": "./out-tsc/spec",
     "types": [
       "jasmine"

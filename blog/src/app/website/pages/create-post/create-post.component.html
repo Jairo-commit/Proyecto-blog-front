@@ -4,7 +4,9 @@
     <div class="w-full flex justify-center mt-6">
       <div class="w-full max-w-2xl border border-stone-700 bg-stone-800 rounded-xl p-6 shadow-md text-stone-100">
   
-        <h2 class="text-2xl font-bold mb-4 text-emerald-400">Create New Post</h2>
+        <h2 class="text-2xl font-bold mb-4 text-emerald-400">
+          {{ isEditMode() ? 'Edit Post' : 'Create New Post' }}
+        </h2>
   
         <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="space-y-4">
   
@@ -21,7 +23,16 @@
           <!-- Content -->
           <div>
             <label class="block text-sm font-medium mb-1">Content</label>
-            <textarea formControlName="content" rows="5"
+            <!-- Rich text editor en modo edición -->
+                <quill-editor
+                *ngIf="isEditMode()"
+                formControlName="content"
+                [styles]="{ height: '200px' }"
+                [modules]="quillConfig"
+                class="bg-white text-black rounded-md custom-quill-editor w-full"
+              ></quill-editor>
+            <!-- Textarea en modo creación -->
+            <textarea *ngIf="!isEditMode()" formControlName="content" rows="5"
                       class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
             <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched" class="text-red-400 text-sm mt-1">
               Content is required
@@ -35,7 +46,11 @@
               <label class="block text-sm font-medium mb-1">Public Access</label>
               <select formControlName="public_access"
                       class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
-                <option *ngFor="let option of publicOptions" [value]="option.value">{{ option.label }}</option>
+                <option 
+                *ngFor="let option of publicOptions" 
+                [value]="option.value"
+                [disabled]="ACCESS_LEVELS[option.value] > currentAuthLevel || ACCESS_LEVELS[option.value] > currentTeamLevel"
+                >{{ option.label }}</option>
               </select>
             </div>
   
@@ -43,15 +58,24 @@
               <label class="block text-sm font-medium mb-1">Authenticated Access</label>
               <select formControlName="authenticated_access"
                       class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
-                <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+                <option 
+                *ngFor="let option of permissionOptions" 
+                [value]="option.value"
+                [disabled]="ACCESS_LEVELS[option.value] > currentTeamLevel">
+                {{ option.label }}
+              </option>
               </select>
             </div>
   
             <div>
               <label class="block text-sm font-medium mb-1">Group Access</label>
               <select formControlName="group_access"
-                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
-                <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+                      class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100"
+                      >
+                <option 
+                *ngFor="let option of permissionOptions" 
+                [value]="option.value"
+                >{{ option.label }}</option>
               </select>
             </div>
   
@@ -59,17 +83,24 @@
               <label class="block text-sm font-medium mb-1">Author Access</label>
               <select formControlName="author_access"
                       class="w-full rounded-lg bg-stone-700 border border-stone-600 p-2 text-stone-100">
-                <option *ngFor="let option of authorOptions" [value]="option.value">{{ option.label }}</option>
+                <option 
+                *ngFor="let option of authorOptions" 
+                [value]="option.value"
+                >{{ option.label }}</option>
               </select>
             </div>
   
           </div>
-  
           <!-- Submit -->
-          <div class="flex justify-end">
+          <div class="flex justify-end space-x-3">
+            <button type="button"
+          (click)="onCancel()"
+          class="px-4 py-2 rounded-lg bg-stone-600 text-stone-100 hover:bg-stone-500 cursor-pointer">
+            Cancel
+            </button>
             <button type="submit"
-                    class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
-              Create Post
+              class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow cursor-pointer">
+              {{ isEditMode() ? 'Save Changes' : 'Publish' }}
             </button>
           </div>
         </form>

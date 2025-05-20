@@ -22,12 +22,19 @@ export const routes: Routes = [
     },
     {
         path: 'posts/create-post',
+        canActivate: [authGuard], // Should be logged
+        component: CreatePostComponent
+    },
+    {
+        path: 'posts/:id/edit-post',
+        canActivate: [authGuard],
         component: CreatePostComponent
     },
     {
         path: 'posts/:id',
         component: DetailpostComponent
     },
+
     {
         path: 'login',
         // canActivate: [redirectGuard], //Shouldn't be logged

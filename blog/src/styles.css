@@ -27,3 +27,27 @@
       filter: blur(4px);
     }
   }
+
+  /* Estilo base para el contenedor del editor */
+.ql-container {
+  background-color: #2d2d2d; /* similar a bg-stone-700 */
+  color: #e5e7eb; /* texto claro, como text-stone-100 */
+  border: 1px solid #4b5563; /* borde gris oscuro similar a border-stone-600 */
+  border-radius: 0.5rem; /* para que tenga esquinas redondeadas */
+  min-height: 200px;
+}
+
+/* Estilo para el toolbar */
+.ql-toolbar {
+  background-color: #1f2937; /* un poco más oscuro */
+  border: 1px solid #4b5563;
+  border-bottom: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+  color: #e5e7eb;
+}
+
+/* Color para los botones activos y hover */
+.ql-toolbar button:hover,
+.ql-toolbar button.ql-active {
+  color: #10b981; /* verde emergente, como emerald-500 */
+}

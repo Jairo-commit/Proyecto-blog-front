@@ -8,6 +8,7 @@ import { LikeService } from '@services/like/like.service';
 import { PostsService } from '@services/posts/posts.service';
 import { LikesComponent } from '../likes/likes.component';
 import { Router } from '@angular/router';
+import { EditModeService } from '@services/edit-mode/edit-mode.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class PostComponent{
   private likeService = inject(LikeService);
   private authService = inject(AuthService);
   private postsService = inject(PostsService);
+  private editModeService = inject(EditModeService);
   
   @Input() post!: Post;
 
@@ -75,6 +77,11 @@ export class PostComponent{
 
   goToPostDetail(postId: string | number) {
     this.router.navigate(['/posts', postId]);
+  }
+
+  goToEditPost(): void {
+    this.editModeService.setEditMode(true);
+    this.router.navigate(['/posts', this.postId, 'edit-post']);
   }
 
   // Función para avanzar a la siguiente página

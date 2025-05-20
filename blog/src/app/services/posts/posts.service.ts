@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 import { enviroment } from '@enviroments/enviroment';
-import { Post, PaginatedPosts } from '@models/post.model';
+import { Post, PaginatedPosts, PostDTO } from '@models/post.model';
 import { checkToken } from '@interceptors/token.interceptor';
 
 @Injectable({
@@ -71,5 +71,13 @@ export class PostsService {
 
   eliminate(id : number){
     return this.http.delete(`${this.postsUrl}${id}/`, { context: checkToken()})
+  }
+
+  create(postData: PostDTO): Observable<PostDTO>{
+    return this.http.post<PostDTO>(this.postsUrl, postData, {context: checkToken()});
+  }
+
+  update(id:string, postData: PostDTO){
+    return this.http.put(`${this.postsUrl}${id}/`, postData, { context:checkToken()});
   }
 }

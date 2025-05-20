@@ -40,3 +40,12 @@ export interface LikesAuthor {
     post_id: number;
     user:    string;
 }
+
+export interface PostDTO{
+    title: string;
+    content: string;
+    public_access: string;
+    authenticated_access: string,
+    group_access: string,
+    author_access: string,
+}

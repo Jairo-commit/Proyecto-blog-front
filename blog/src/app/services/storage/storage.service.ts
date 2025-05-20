@@ -36,7 +36,7 @@ export class StorageService {
     }
   }
 
-  isValidToken(){
+  isValidToken(): boolean{
     const token = this.getItem('access');
     if(!token){
       return false;
