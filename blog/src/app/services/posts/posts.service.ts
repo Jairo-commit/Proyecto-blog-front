@@ -4,7 +4,6 @@ import { Observable, tap } from 'rxjs';
 
 import { enviroment } from '@enviroments/enviroment';
 import { Post, PaginatedPosts, PostDTO } from '@models/post.model';
-import { checkToken } from '@interceptors/token.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -34,18 +33,6 @@ export class PostsService {
     this._pagination.set(pagination);
   }
 
-  getPostsToken(page: number = 1): Observable<PaginatedPosts> {
-    return this.http.get<PaginatedPosts>(`${this.postsUrl}?page=${page}`, {
-      context: checkToken()
-    }).pipe(
-      tap(response => {
-        this._posts.set(response.results);
-        const { results, ...pagination } = response;
-        this._pagination.set(pagination);
-      })
-    );
-  }
-
   getPosts(page: number = 1): Observable<PaginatedPosts> {
     return this.http.get<PaginatedPosts>(`${this.postsUrl}?page=${page}`).pipe(
       tap(response => {
@@ -61,8 +48,7 @@ export class PostsService {
   }
 
   getPostById(id: string): Observable<Post> {
-    return this.http.get<Post>(`${this.postsUrl}${id}`, {
-      context: checkToken()}).pipe(
+    return this.http.get<Post>(`${this.postsUrl}${id}`).pipe(
         tap(response => {
           this.post.set(response);
         })
@@ -70,14 +56,14 @@ export class PostsService {
   }
 
   eliminate(id : number){
-    return this.http.delete(`${this.postsUrl}${id}/`, { context: checkToken()})
+    return this.http.delete(`${this.postsUrl}${id}/`)
   }
 
   create(postData: PostDTO): Observable<PostDTO>{
-    return this.http.post<PostDTO>(this.postsUrl, postData, {context: checkToken()});
+    return this.http.post<PostDTO>(this.postsUrl, postData);
   }
 
   update(id:string, postData: PostDTO){
-    return this.http.put(`${this.postsUrl}${id}/`, postData, { context:checkToken()});
+    return this.http.put(`${this.postsUrl}${id}/`, postData);
   }
 }

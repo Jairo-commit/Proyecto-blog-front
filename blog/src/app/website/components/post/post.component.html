@@ -6,12 +6,13 @@
       class="flex items-center justify-between border-b border-stone-700 pb-3"
     >
       <div class="flex items-center space-x-3">
-        <div class="text-lg font-semibold text-stone-100">
+        <div id="author" class="text-lg font-semibold text-stone-100">
           {{ post.author }}
         </div>
       </div>
       <div class="flex items-center space-x-8 text-stone-400">
         <span
+          id="grupo"
           class="rounded-full bg-stone-700 px-3 py-1 text-xs font-medium text-emerald-400"
         >
           {{ post.author_groups[0] }}
@@ -23,7 +24,7 @@
     </div>
     <div class="mt-4 mb-6">
       <div class="mb-2 text-xl font-bold text-stone-100">{{ post.title }}</div>
-      <div class="text-sm text-stone-400">{{ post.excerpt }}</div>
+      <div class="text-sm text-stone-400" [innerHTML]="post.excerpt"></div>
       <a
         *ngIf="post.content.length > 200"
         class="text-emerald-400 font-medium cursor-pointer hover:underline"

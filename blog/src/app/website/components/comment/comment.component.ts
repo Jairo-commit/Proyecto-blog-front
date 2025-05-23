@@ -9,7 +9,6 @@ import { CommentService } from '@services/comments/comment.service';
   selector: 'app-comment',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './comment.component.html',
-  styleUrl: './comment.component.css'
 })
 export class CommentComponent {
 
@@ -64,7 +63,6 @@ export class CommentComponent {
   
     this.commentService.add(commentData, id).subscribe({
       next: (res) => {
-        console.log('Comentario enviado:', res);
         this.commentService.getComments(id, 1).subscribe();
         this.commentForm.reset();
       },

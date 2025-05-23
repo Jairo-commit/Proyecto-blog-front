@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { enviroment } from '@enviroments/enviroment';
-import { checkToken } from '@interceptors/token.interceptor';
 import { Comments_author, PaginatedComments } from '@models/comment.model';
 import { Observable, tap } from 'rxjs';
 
@@ -24,9 +23,7 @@ export class CommentService {
   constructor() { }
 
   getComments(postId:string, page: number = 1): Observable<PaginatedComments>{
-    return this.http.get<PaginatedComments>(`${this.postsUrl}${postId}/comments/?page=${page}`, {
-      context: checkToken()
-    }).pipe(
+    return this.http.get<PaginatedComments>(`${this.postsUrl}${postId}/comments/?page=${page}`).pipe(
       tap(response => {
         this._comments.set(response.results);
         const { results, ...pagination } = response;
@@ -36,8 +33,6 @@ export class CommentService {
   }
 
   add(comment: { content: string }, id:string){
-    return this.http.post<Comments_author>(`${this.postsUrl}${id}/add-comment/`, comment , {
-      context: checkToken()
-    });
+    return this.http.post<Comments_author>(`${this.postsUrl}${id}/add-comment/`, comment );
   }
 }

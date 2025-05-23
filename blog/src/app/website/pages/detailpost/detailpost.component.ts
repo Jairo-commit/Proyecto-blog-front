@@ -26,6 +26,7 @@ export class DetailpostComponent {
       const isLoggedIn = this.authService.isLoggedInSignal();
       this.postId.set(this.route.snapshot.paramMap.get('id'));
       const id = this.postId();
+      this.post.set(null)
 
       if (id) {
         this.postsService.getPostById(id).subscribe();

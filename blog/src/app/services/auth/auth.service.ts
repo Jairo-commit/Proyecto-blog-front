@@ -1,12 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap, tap } from 'rxjs';
+import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { enviroment } from '@enviroments/enviroment';
 import { Token } from '@models/token.model';
 import { User } from '@models/user.model';
 import { StorageService } from '@services/storage/storage.service';
-import { checkToken } from '@interceptors/token.interceptor';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,25 +15,21 @@ export class AuthService {
   private apiUrl = enviroment.API_URL;
   private loginUrl = `${this.apiUrl}api/token/`;
   private profileUrl = `${this.apiUrl}api/me/`;
+  private refreshUrl = `${this.apiUrl}api/token/refresh/`;
 
-  private currentUser = signal<User | null>(null);
+  currentUser = signal<User | null>(null);
   readonly currentUserSignal = this.currentUser;
 
   private http = inject(HttpClient);
   private storageService = inject(StorageService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   // ✅ Signal reactivo de login
   private isLoggedIn = signal(this.storageService.isValidToken());
   readonly isLoggedInSignal = this.isLoggedIn;
 
-  constructor() {
-    if (this.storageService.isValidToken()) {
-      this.profile().subscribe({
-        next: (user) => this.currentUser.set(user),
-        error: () => this.logout()
-      });
-    }
-  } 
+  isLoggingOut = signal<boolean>(false);
 
   login(username: string, password: string): Observable<User>{
 
@@ -51,13 +48,64 @@ export class AuthService {
   };
 
   profile(){
-    return this.http.get<User>(`${this.profileUrl}`, {context: checkToken()})
+    return this.http.get<User>(`${this.profileUrl}`)
   }
 
-  logout(){
+  logout() {
+    const refresh = this.storageService.getItem("refresh");
+    this.isLoggingOut.set(true);
+  
+    if (refresh) {
+
+      this.http.post(
+        'http://localhost:8000/api/logout/',
+        { refresh },
+      ).subscribe({
+        next: () => {
+          this.clearSession();
+        },
+        error: (err) => {
+          console.error('Error al hacer logout:', err);
+          this.clearSession(); // Siempre limpia por seguridad
+        },
+        complete: () => {
+          this.isLoggingOut.set(false); // 🔁 Reactiva el botón SIEMPRE
+        }
+      });
+    } else {
+      this.clearSession();
+      this.isLoggingOut.set(false);
+    }
+  }
+  
+  clearSession() {
     this.storageService.removeItem("access");
     this.storageService.removeItem("refresh");
-    this.isLoggedIn.set(false); 
+    this.isLoggedIn.set(false);
+    this.router.navigate(['/posts']);
+    this.snackBar.open('Sesión cerrada correctamente.', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
+  }
+
+  refresh(): Observable<{access: string}> {
+    return this.http.post<{access: string}>(this.refreshUrl, {refresh: this.storageService.getItem('refresh')}).pipe(
+      tap(
+        response => {
+          this.storageService.saveToken('access' , response.access)
+          this.isLoggedIn.set(true);
+          this.profile().subscribe();
+        }
+      ),
+      catchError(
+        (err) =>{
+          this.clearSession();
+          return throwError(()=> err);
+        }
+      )
+    );
   }
 
 }

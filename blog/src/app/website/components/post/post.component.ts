@@ -51,7 +51,7 @@ export class PostComponent{
 
 // Inicializa tus objetos si es posible (aunque sea con valores dummy) para prevenir errores en el template.
   effect(() => {
-    const isLoggedIn = this.authService.isLoggedInSignal();
+    // const isLoggedIn = this.authService.isLoggedInSignal();
     const postPage = this.postsService.pagination()?.current_page;
     this.currentPage.set(1);
     this.showLikes.set(false);
@@ -63,15 +63,9 @@ export class PostComponent{
     const page = this.currentPage();
     const postPage = this.postsService.pagination()?.current_page;
 
-    if (isLoggedIn) {
-      this.likeService.getLikesToken(this.post.id , page).subscribe((response)=>{
-        this.likesPost.set(response);
-      });
-    } else {
       this.likeService.getLikes(this.post.id, page).subscribe((response)=>{
         this.likesPost.set(response);
       });
-    }
   });
   }
 
@@ -150,8 +144,6 @@ export class PostComponent{
           total_count: currentLikes.total_count + like,
           results: newResults
         };
-        console.log('mis likes son', updatedLikes)
-  
         this.likesPost.set(updatedLikes);
         this._hasLiked.set(!hasLiked);
         this.showLikes.set(false);

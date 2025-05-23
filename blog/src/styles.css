@@ -51,3 +51,5 @@
 .ql-toolbar button.ql-active {
   color: #10b981; /* verde emergente, como emerald-500 */
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

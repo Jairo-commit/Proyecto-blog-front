@@ -5,7 +5,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-create-post-button',
   imports: [RouterLink],
   templateUrl: './create-post-button.component.html',
-  styleUrl: './create-post-button.component.css'
 })
 export class CreatePostButtonComponent {
 

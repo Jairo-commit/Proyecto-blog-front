@@ -9,7 +9,6 @@
         >Avanzatech</span
       >
     </a>
-    <!-- Si usas Angular *ngIf en vez de sintaxis razor -->
     <ng-container *ngIf="isLoggedIn(); else loggedOut">
       <div class="block w-auto">
         <ul
@@ -17,6 +16,7 @@
         >
           <li>
             <a
+              id="profile-link"
               class="block py-1 px-2 text-stone-100 rounded-sm hover:bg-emerald-400 hover:text-stone-900"
               aria-current="page"
               >{{ profile?.username }}</a
@@ -24,8 +24,9 @@
           </li>
           <li>
             <button
-              (click)="logout()"
-              class="block py-1 px-2 text-stone-100 rounded-sm hover:bg-emerald-400 hover:text-stone-900"
+              id="logout-button"
+              (click)="toggleLogout()"
+              class="block py-1 px-2 text-stone-100 rounded-sm hover:bg-emerald-400 hover:text-stone-900 cursor-pointer"
             >
               Logout
             </button>
@@ -40,7 +41,8 @@
         >
         <li>
           <a
-            routerLink="/register"
+            id="register-a"
+            [routerLink]="['/register']"
             class="block py-1 px-2 text-stone-100 rounded-sm transition duration-300 ease-in-out hover:bg-emerald-400 hover:text-stone-900"
             aria-current="page"
           >
@@ -49,6 +51,7 @@
         </li>
         <li>
           <a
+          id="login-a"
           [routerLink]="['/login']"
             class="block py-1 px-2 text-stone-100 rounded-sm transition duration-300 ease-in-out hover:bg-emerald-400 hover:text-stone-900"
           >
@@ -61,3 +64,29 @@
     </ng-template>
   </div>
 </nav>
+<div [hidden]="!logingOut()">
+  <div
+    class="fixed inset-0 flex items-center justify-center bg-black opacity-40 z-20"
+  ></div>
+  <div class="fixed inset-0 flex items-center justify-center z-20">
+    <div class="bg-white p-6 rounded-lg shadow-lg opacity-100">
+      <h2 class="text-xl font-bold mb-4">
+        ¿Estás seguro de querer salir de la aplicación?
+      </h2>
+      <div class="flex justify-end gap-4">
+        <button class="px-4 py-2 bg-red-500 text-gray-700 rounded hover:bg-red-600 cursor-pointer" 
+          mat-raised-button color="warn" (click)="logout()" [disabled]="isLoggingOut()" (click)="toggleLogout()">
+          <mat-spinner *ngIf="isLoggingOut()" diameter="20"></mat-spinner>
+          <span *ngIf="!isLoggingOut()">Cerrar sesión</span>
+        </button>
+        
+        <button
+          (click)="toggleLogout()"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

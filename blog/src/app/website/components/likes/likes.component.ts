@@ -6,11 +6,8 @@ import { LikesAuthor } from '@models/post.model';
   selector: 'app-likes',
   imports: [CommonModule],
   templateUrl: './likes.component.html',
-  styleUrl: './likes.component.css'
 })
 export class LikesComponent {
   @Input() likes!: LikesAuthor;   //likes del post
-
-  constructor() {}
 
 }

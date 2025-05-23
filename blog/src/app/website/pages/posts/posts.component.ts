@@ -32,11 +32,7 @@ export class PostsComponent {
       const page = this.currentPage();
       const refresh = this.postService.refreshTrigger();
 
-      if (isLoggedIn) {
-        this.postService.getPostsToken(page).subscribe();
-      } else {
-        this.postService.getPosts(page).subscribe();
-      }
+      this.postService.getPosts(page).subscribe();
     });
   }
 

@@ -6,8 +6,6 @@ import { AuthService } from './auth.service';
 import { StorageService } from '@services/storage/storage.service';
 import { Token } from '@models/token.model';
 import { User } from '@models/user.model';
-import { enviroment } from '@enviroments/enviroment';
-import { response } from 'express';
 
 describe('AuthService', () => {
 

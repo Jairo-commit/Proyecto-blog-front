@@ -1,6 +1,7 @@
 <div class="min-h-screen bg-stone-900 flex flex-col">
   <app-nav></app-nav>
   <div class="w-full max-w-screen flex justify-center mt-3">
+    @if (this.post()) {
     <div class="flex justify-center flex-col">
       <div
         class="rounded-xl flex flex-col justify-center w-3xl border border-stone-700 bg-stone-800 p-5 shadow-md"
@@ -29,7 +30,10 @@
           <div class="mb-2 text-xl font-bold text-stone-100">
             {{ post()?.title }}
           </div>
-          <div class="text-sm text-stone-400">{{ post()?.content }}</div>
+          <div
+            class="text-sm text-stone-400"
+            [innerHTML]="post()?.content"
+          ></div>
         </div>
 
         <div>
@@ -44,5 +48,8 @@
       </div>
       <app-comment class="flex justify-center"></app-comment>
     </div>
+    }@else { 
+      <strong class="text-stone-100">post not found </strong>
+    }
   </div>
 </div>
