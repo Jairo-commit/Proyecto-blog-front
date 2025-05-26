@@ -1,7 +1,5 @@
 import {
   HttpInterceptorFn,
-  HttpContextToken,
-  HttpContext,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 

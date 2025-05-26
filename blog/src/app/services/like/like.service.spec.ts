@@ -66,7 +66,7 @@ describe('LikeService', () => {
   });
 
   it('should fetch likes with token context', () => {
-    service.getLikesToken(123, 2).subscribe(response => {
+    service.getLikes(123, 2).subscribe(response => {
       expect(response).toEqual(mockLikeResponse);
     });
 
@@ -105,7 +105,7 @@ describe('LikeService', () => {
   });
   
   it('should handle unauthorized error when fetching likes with token', () => {
-    service.getLikesToken(123).subscribe({
+    service.getLikes(123).subscribe({
       next: () => fail('Expected a 401 error'),
       error: (error) => {
         expect(error.status).toBe(401);

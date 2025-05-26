@@ -91,7 +91,6 @@ describe('PostComponent', () => {
 
     authServiceSpy.currentUserSignal.and.returnValue(mockUser);
     authServiceSpy.isLoggedInSignal.and.returnValue(true);
-    likeServiceSpy.getLikesToken.and.returnValue(of(mockLikesResponse));
     likeServiceSpy.getLikes.and.returnValue(of(mockLikesResponse));
     likeServiceSpy.addLike.and.returnValue(of({}));
 

@@ -14,7 +14,6 @@ import { NavComponent } from '@website/components/nav/nav.component';
   selector: 'app-create-post',
   imports: [NavComponent, CommonModule, ReactiveFormsModule, QuillModule],
   templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.css'
 })
 export class CreatePostComponent{
 
@@ -45,8 +44,7 @@ export class CreatePostComponent{
   isEditMode = this.editModeService.isEditMode;
 
   postId = signal<string | null>(null);
-  post = this.postsService.post; // El mismo que ya usas en Detailpost
-
+  post = this.postsService.post; 
   public readonly authorOptions = [{value: 'Read and Edit', label : 'Read and Write'}];
   public readonly publicOptions = [
     {value: 'None', label : 'None'},

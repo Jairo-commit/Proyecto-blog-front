@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { EditModeService } from '@services/edit-mode/edit-mode.service';
 
 @Component({
   selector: 'app-create-post-button',
@@ -8,4 +9,9 @@ import { RouterLink } from '@angular/router';
 })
 export class CreatePostButtonComponent {
 
+  editModeService = inject(EditModeService);
+
+  goToPostCreation(): void {
+    this.editModeService.setEditMode(false);
+  }
 }

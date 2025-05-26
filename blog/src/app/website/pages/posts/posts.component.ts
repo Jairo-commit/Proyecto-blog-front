@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 
 import { NavComponent } from '@website/components/nav/nav.component';
 import { PostComponent } from '@website/components/post/post.component';
@@ -22,6 +22,7 @@ export class PostsComponent {
   
   currentPage = this.postService.currentPage; // para poder navegar entre páginas
 
+  isLoggedIn = this.authService.isLoggedInSignal;
   get profile() {
     return this.authService.currentUserSignal();
   }

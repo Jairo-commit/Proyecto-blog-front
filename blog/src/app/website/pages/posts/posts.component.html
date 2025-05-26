@@ -20,7 +20,7 @@
         Anterior
       </button>
 
-      <span class="text-stone-100 text-sm">
+      <span id="paginas" class="text-stone-100 text-sm">
         Página {{ pagination()?.current_page }} de {{ pagination()?.total_pages }}
       </span>
 
@@ -34,7 +34,7 @@
     </div>
   </section>
 </main>
-@if (profile !== null) {
+@if (isLoggedIn()) {
   <div class="fixed bottom-1/7 right-24 cursor-pointer">
   <app-create-post-button />
 </div>

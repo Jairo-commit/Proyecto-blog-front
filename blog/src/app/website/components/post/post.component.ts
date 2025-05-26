@@ -2,7 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, effect, inject, Input, signal } from '@angular/core';
 import { LikePaginationResponse } from '@models/like.model';
 
-import { LikesAuthor, Post } from '@models/post.model';
+import { Post } from '@models/post.model';
 import { AuthService } from '@services/auth/auth.service';
 import { LikeService } from '@services/like/like.service';
 import { PostsService } from '@services/posts/posts.service';
@@ -119,32 +119,18 @@ export class PostComponent{
   
         const hasLiked = this._hasLiked();
   
-        let newResults: LikesAuthor[];
         let like: 1|-1;
   
         if (hasLiked) {
           like = -1
-          newResults = currentLikes.results.filter(like => like.user !== user.username);
 
         } else {
           like = 1
-          newResults = [
-            ...currentLikes.results,
-            {
-              id: Date.now(),
-              post: '',
-              post_id: post.id,
-              user: user.username
-            }
-          ];
         }
-  
-        const updatedLikes: LikePaginationResponse = {
-          ...currentLikes,
-          total_count: currentLikes.total_count + like,
-          results: newResults
-        };
-        this.likesPost.set(updatedLikes);
+
+        this.likeService.getLikes(this.post.id, 1).subscribe((response)=>{
+          this.likesPost.set(response);
+        });
         this._hasLiked.set(!hasLiked);
         this.showLikes.set(false);
       }

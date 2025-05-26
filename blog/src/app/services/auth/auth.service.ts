@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  
   private apiUrl = enviroment.API_URL;
   private loginUrl = `${this.apiUrl}api/token/`;
   private profileUrl = `${this.apiUrl}api/me/`;
@@ -31,58 +30,48 @@ export class AuthService {
 
   isLoggingOut = signal<boolean>(false);
 
-  login(username: string, password: string): Observable<User>{
-
-    return this.http.post<Token>(this.loginUrl, { username, password })
-    .pipe(
-      tap( response => {
-        this.storageService.saveToken('access' , response.access)
-        this.storageService.saveToken('refresh' , response.refresh)
+  login(username: string, password: string): Observable<User> {
+    return this.http.post<Token>(this.loginUrl, { username, password }).pipe(
+      tap((response) => {
+        this.storageService.saveToken('access', response.access);
+        this.storageService.saveToken('refresh', response.refresh);
         this.isLoggedIn.set(true);
       }),
       switchMap(() => this.profile()),
-      tap(user => {
+      tap((user) => {
         this.currentUser.set(user);
       })
-    )
-  };
+    );
+  }
 
-  profile(){
-    return this.http.get<User>(`${this.profileUrl}`)
+  profile() {
+    return this.http.get<User>(`${this.profileUrl}`);
   }
 
   logout() {
-    const refresh = this.storageService.getItem("refresh");
+    const refresh = this.storageService.getItem('refresh');
     this.isLoggingOut.set(true);
-  
-    if (refresh) {
 
-      this.http.post(
-        'http://localhost:8000/api/logout/',
-        { refresh },
-      ).subscribe({
-        next: () => {
-          this.clearSession();
-        },
-        error: (err) => {
-          console.error('Error al hacer logout:', err);
-          this.clearSession(); // Siempre limpia por seguridad
-        },
-        complete: () => {
-          this.isLoggingOut.set(false); // 🔁 Reactiva el botón SIEMPRE
-        }
-      });
+    if (refresh) {
+      this.http
+        .post('http://localhost:8000/api/logout/', { refresh })
+        .subscribe({
+          complete: () => {
+            this.clearSession();
+            this.router.navigate(['/posts']);
+            this.isLoggingOut.set(false); // 🔁 Reactiva el botón SIEMPRE
+          },
+        });
     } else {
       this.clearSession();
       this.isLoggingOut.set(false);
     }
   }
-  
+
   clearSession() {
-    this.storageService.removeItem("access");
-    this.storageService.removeItem("refresh");
+    this.storageService.removeItem('access');
+    this.storageService.removeItem('refresh');
     this.isLoggedIn.set(false);
-    this.router.navigate(['/posts']);
     this.snackBar.open('Sesión cerrada correctamente.', 'Cerrar', {
       duration: 3000,
       horizontalPosition: 'right',
@@ -90,22 +79,21 @@ export class AuthService {
     });
   }
 
-  refresh(): Observable<{access: string}> {
-    return this.http.post<{access: string}>(this.refreshUrl, {refresh: this.storageService.getItem('refresh')}).pipe(
-      tap(
-        response => {
-          this.storageService.saveToken('access' , response.access)
+  refresh(): Observable<{ access: string }> {
+    return this.http
+      .post<{ access: string }>(this.refreshUrl, {
+        refresh: this.storageService.getItem('refresh'),
+      })
+      .pipe(
+        tap((response) => {
+          this.storageService.saveToken('access', response.access);
           this.isLoggedIn.set(true);
           this.profile().subscribe();
-        }
-      ),
-      catchError(
-        (err) =>{
+        }),
+        catchError((err) => {
           this.clearSession();
-          return throwError(()=> err);
-        }
-      )
-    );
+          return throwError(() => err);
+        })
+      );
   }
-
 }

@@ -23,7 +23,7 @@ export class DetailpostComponent {
 
   constructor() {
     effect(() => {
-      const isLoggedIn = this.authService.isLoggedInSignal();
+      // const isLoggedIn = this.authService.isLoggedInSignal();
       this.postId.set(this.route.snapshot.paramMap.get('id'));
       const id = this.postId();
       this.post.set(null)

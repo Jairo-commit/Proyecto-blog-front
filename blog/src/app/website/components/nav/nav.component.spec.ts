@@ -7,6 +7,7 @@ import { User } from '@models/user.model';
 import { By } from '@angular/platform-browser';
 import { RegisterComponent } from '@website/pages/register/register.component';
 import { LoginComponent } from '@website/pages/login/login.component';
+import { of } from 'rxjs';
 
 describe('NavComponent', () => {
   let component: NavComponent;
@@ -32,6 +33,7 @@ describe('NavComponent', () => {
     isLoggingOut: signal(false) as WritableSignal<boolean>,
     currentUserSignal: signal(mockUser) as WritableSignal<User | null>,
     logout: jasmine.createSpy('logout'),
+    profile: jasmine.createSpy('profile').and.returnValue(of(mockUser)),
   };
 
   beforeEach(async () => {

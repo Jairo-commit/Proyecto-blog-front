@@ -110,7 +110,7 @@ describe('PostsService', () => {
   });
 
   it('should fetch posts with token and update signals', () => {
-    service.getPostsToken(1).subscribe(response => {
+    service.getPosts(1).subscribe(response => {
       expect(response.results.length).toBe(2);
       expect(service.posts()).toEqual(mockPosts);
       expect(service.pagination()).toEqual({
