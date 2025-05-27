@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@services/auth/auth.service';
+import { EditModeService } from '@services/edit-mode/edit-mode.service';
 
 import { PostsService } from '@services/posts/posts.service';
 import { CommentComponent } from '@website/components/comment/comment.component';
@@ -17,6 +18,8 @@ export class DetailpostComponent {
   private route = inject(ActivatedRoute);
   private postsService =  inject(PostsService);
   private authService = inject(AuthService);
+  editModeService = inject(EditModeService);
+  router = inject(Router);
 
   postId = signal<string | null>(''); 
   post = this.postsService.post;
@@ -32,5 +35,10 @@ export class DetailpostComponent {
         this.postsService.getPostById(id).subscribe();
       }
     });
+  }
+
+  goToEditPost(): void {
+    this.editModeService.setEditMode(true);
+    this.router.navigate(['/posts', Number(this.postId()), 'edit-post']);
   }
 }

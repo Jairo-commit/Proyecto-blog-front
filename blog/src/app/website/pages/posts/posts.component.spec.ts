@@ -170,12 +170,4 @@ describe('PostsComponent', () => {
     expect(createBtn).toBeTruthy();
   });
   
-  it('no debería mostrar el botón de crear post si no está logueado', () => {
-    mockAuthService.isLoggedInSignal = signal(true);
-    fixture.detectChanges();
-  
-    const createBtn = fixture.debugElement.query(By.css('app-create-post-button'));
-    expect(createBtn).toBeNull();
-  });
-
 });

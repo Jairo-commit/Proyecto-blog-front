@@ -8,10 +8,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { PostsService } from '@services/posts/posts.service';
 import { AuthService } from '@services/auth/auth.service';
 
-import { CommentComponent } from '@website/components/comment/comment.component';
-import { NavComponent } from '@website/components/nav/nav.component';
 import { Post } from '@models/post.model';
 import { of } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('DetailpostComponent', () => {
   let component: DetailpostComponent;
@@ -39,7 +39,7 @@ describe('DetailpostComponent', () => {
     author: 'mockuser',
     created_at: '2024-05-01T12:00:00Z',
     updated_at: '2024-05-02T15:30:00Z',
-    author_groups: ['admin', 'editor'],
+    author_groups: ['admin'],
     public_access: 'read',
     authenticated_access: 'read',
     group_access: 'write',
@@ -76,6 +76,8 @@ describe('DetailpostComponent', () => {
       imports: [CommonModule, MockNavComponent, MockCommentComponent, DetailpostComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -100,8 +102,8 @@ describe('DetailpostComponent', () => {
               username: 'mockuser',
               password: 'contraseña' })), 
             isLoggedInSignal: () => signal(true),
-            isLoggingOut: () => false, // ✅ esta línea resuelve el error actual
-            currentUserSignal: () => signal({ id: 0, username: 'mockuser', team: 'mockteam' }), // por si acaso
+            isLoggingOut: () => false, 
+            currentUserSignal: () => signal({ id: 0, username: 'mockuser', team: 'mockteam' }),
           },
         },
       ],
@@ -129,6 +131,39 @@ describe('DetailpostComponent', () => {
     // simulamos manualmente la actualización (porque el effect ya llamó .subscribe)
     mockPostSignal.set(mockPost);
     expect(component.post()).toEqual(mockPost);
+  });
+  
+  it('should display post data when post is available', () => {
+    // actualiza la señal manualmente
+    component.post.set(mockPost);
+    fixture.detectChanges();
+  
+    const titleEl = fixture.nativeElement.querySelector('div.text-xl');
+    const authorEl = fixture.nativeElement.querySelector('#author');
+    const groupEl = fixture.nativeElement.querySelector('#grupos');
+    const likesEl = fixture.nativeElement.querySelector('#quantity_likes');
+  
+    expect(titleEl.textContent).toContain(mockPost.title);
+    expect(authorEl.textContent).toContain(mockPost.author);
+    expect(groupEl.textContent).toContain(mockPost.author_groups[0]);
+    expect(likesEl.textContent).toContain(`${mockPost.likes_author.length}`);
+  });
+
+  it('should show "post not found" when post is null', () => {
+    component.post.set(null);
+    fixture.detectChanges();
+  
+    const notFoundEl = fixture.nativeElement.querySelector('strong');
+    expect(notFoundEl.textContent).toContain('post not found');
+  });
+  
+  it('should display the formatted created_at date', () => {
+    component.post.set(mockPost);
+    fixture.detectChanges();
+  
+    const dateEl = fixture.nativeElement.querySelector('.text-neutral-500');
+    const expectedDate = new Date(mockPost.created_at).toLocaleDateString(); // formato local por defecto
+    expect(dateEl.textContent).toContain('May 1, 2024');
   });
   
   

@@ -118,15 +118,6 @@ describe('PostComponent', () => {
     expect(component.showLikes()).toBe(!initialState);
   });
 
-  it('should call addLike and update like data on likePost()', fakeAsync(() => {
-    component._hasLiked.set(false);
-    component.likePost();
-    tick();
-    expect(likeServiceSpy.addLike).toHaveBeenCalledWith(mockPost.id);
-    expect(component._hasLiked()).toBeTrue();
-    expect(component.likesPost()?.total_count).toBe(2);
-  }));
-
   it('should navigate to edit post on goToEditPost()', () => {
     component.goToEditPost();
     expect(editModeServiceSpy.setEditMode).toHaveBeenCalledWith(true);

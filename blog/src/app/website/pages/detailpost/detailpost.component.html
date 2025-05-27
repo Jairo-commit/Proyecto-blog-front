@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-stone-900 flex flex-col">
   <app-nav></app-nav>
   <div class="w-full max-w-screen flex justify-center mt-3">
-    @if (this.post()) {
+    @if (post()) {
     <div class="flex justify-center flex-col">
       <div
         class="rounded-xl flex flex-col justify-center w-3xl border border-stone-700 bg-stone-800 p-5 shadow-md"
@@ -14,7 +14,7 @@
               {{ post()?.author }}
             </div>
           </div>
-          <div class="flex items-center space-x-8 text-stone-400">
+          <div id="grupos" class="flex items-center space-x-8 text-stone-400">
             <span
               *ngIf="post()?.author_groups?.length !== undefined"
               class="rounded-full bg-stone-700 px-3 py-1 text-xs font-medium text-emerald-400"
@@ -37,11 +37,28 @@
         </div>
 
         <div>
-          <div class="flex items-center justify-evenly text-slate-500">
+          <div id="quantity_likes"class="flex items-center justify-evenly text-slate-500">
             <div class="relative">
               <div>
                 <span>{{ post()?.likes_author?.length }} likes</span>
               </div>
+            </div>
+            <div *ngIf="post()!.permission_level >= 3" class="relative flex cursor-pointer items-center transition hover:text-emerald-600">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="mr-1.5 h-5 w-5"
+            (click)="goToEditPost()"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+            />
+          </svg>
             </div>
           </div>
         </div>

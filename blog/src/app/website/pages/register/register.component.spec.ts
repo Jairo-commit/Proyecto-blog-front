@@ -5,9 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { RegisterService } from '../../../services/register/register.service';
 import { of, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 
 describe('RegisterComponent', () => {

@@ -173,7 +173,6 @@ export class CreatePostComponent{
       });
     }
   }
-  
 
   onCancel(): void {
     this.location.back();
